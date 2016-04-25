@@ -115,6 +115,7 @@ export function emitEvent(event = {}) {
           channels: Object.assign({}, channels, {
             [channel]: {
               ...c,
+              viewed: activeChannel === channel,
               events: [...c.events, data],
             },
           }),
