@@ -5,7 +5,7 @@ import { createStore, applyMiddleware } from 'redux';
 export default function configureStore(initialState) {
   let middleware = [thunkMiddleware];
 
-  if (process.env.__DEV__) {
+  if (process.env.NODE_ENV === 'development') {
     middleware = [...middleware, require('redux-logger')({ collapsed: true })];
   }
 
