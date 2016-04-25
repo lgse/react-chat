@@ -1,0 +1,17 @@
+export default {
+  accent: '#448AFF',
+  black: '#000',
+  borderColor: '#EEE',
+  darkPrimary: '#303F9F',
+  disabledAccent: '#A1A1A1',
+  dividerColor: '#B6B6B6',
+  fieldBorderColor: '#CCC',
+  error: '#D32F2F',
+  lightPrimary: '#C5CAE9',
+  menuItemHover: '#F5F5F5',
+  primary: '#3F51B5',
+  primaryText: '#212121',
+  secondaryText: '#727272',
+  success: '#4CAF50',
+  white: '#FFF',
+};

@@ -1,0 +1,12 @@
+{
+  "extends": "airbnb",
+  "parser": "babel-eslint",
+  "rules": {
+    "react/jsx-closing-bracket-location": 0,
+    "react/jsx-no-bind": 0,
+    "react/prefer-stateless-function": 0,
+    "react/self-closing-comp": 0,
+    "strict": 0,
+    "no-unused-vars": 0
+  }
+}

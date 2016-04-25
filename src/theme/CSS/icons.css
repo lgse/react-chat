@@ -1,0 +1,21 @@
+/* @1x Icons */
+.icon{
+  display:inline-block;
+  position:relative
+}
+.icon:before{
+  float:left
+}
+.icon.loader{
+  background-image:url('/images/loader.gif');
+  background-size:30px 30px;
+  height:30px;
+  width:30px
+}
+
+/* @2x Icons */
+@media (-webkit-min-device-pixel-ratio: 2),(min-resolution:192dpi) {
+  .icon.loader{
+    background-image:url('/images/loader@2x.gif')
+  }
+}
