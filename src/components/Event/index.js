@@ -26,6 +26,7 @@ export class ChannelEvent extends React.Component {
     className: PropTypes.string,
     dispatch: PropTypes.func.isRequired,
     event: PropTypes.object.isRequired,
+    login: PropTypes.object.isRequired,
     primus: PropTypes.object.isRequired,
     style: PropTypes.object,
   };
@@ -33,16 +34,25 @@ export class ChannelEvent extends React.Component {
   render() {
     const {
       event,
+      login,
       primus,
       style,
     } = this.props;
+    const me = event.username === login.username;
 
     let parsedEvent = '';
+    let timestamp = true;
     let color = Colors.secondaryText;
 
     switch (event.type) {
       case 'join':
-        parsedEvent = <span><b>{event.username}</b> has joined #{event.channel}</span>;
+        if (me) {
+          color = Colors.success;
+          timestamp = false;
+          parsedEvent = <span>Welcome to #{event.channel}!</span>;
+        } else {
+          parsedEvent = <span><b>{event.username}</b> has joined #{event.channel}</span>;
+        }
         break;
 
       case 'leave':
@@ -105,7 +115,7 @@ export class ChannelEvent extends React.Component {
       : (
         <div style={styles.outer}>
           <div style={styles.event}>
-            <span>[{moment(event.timestamp).format('HH:mm')}] </span>
+            {timestamp && <span>[{moment(event.timestamp).format('HH:mm')}] </span>}
             {parsedEvent}
           </div>
         </div>
@@ -115,6 +125,7 @@ export class ChannelEvent extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    login: state.login,
     primus: state.primus,
   };
 }
