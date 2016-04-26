@@ -8,7 +8,7 @@ import TextField from '~/components/TextField';
 import { Colors } from '~/theme';
 import { connect } from 'react-redux';
 import { initializeSocket } from '~/redux/primus';
-import { requestLogin, loginError } from '~/redux/login';
+import { requestLogin, loginError, loginReset } from '~/redux/login';
 
 const getStyles = (resolution) => ({
   outer: {
@@ -89,38 +89,37 @@ class Login extends React.Component {
     this.state = {
       server: '',
       username: '',
-      protocol: 'ws',
+      protocol: 'wss',
     };
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    this.login();
-  };
 
-  validate = () => {
-    const { server, username } = this.state;
-    if (!server) {
-      throw new Error('Server field cannot be empty.');
-    } else if (!username) {
-      throw new Error('Username field cannot be empty.');
-    }
+    this.login();
   };
 
   login = () => {
     const { dispatch, login, primus } = this.props;
     const { protocol, server, username } = this.state;
 
-    try {
-      this.validate();
+    if (!primus.connecting) {
+      if (login.error && !login.requesting) {
+        dispatch(loginReset());
+      }
 
       new Promise((resolve) => {
-        if (!primus.connected && !primus.connecting) {
+        if (!server) {
+          throw new Error('Server field cannot be empty.');
+        } else if (!username) {
+          throw new Error('Username field cannot be empty.');
+        } else if (!primus.connected) {
           dispatch(initializeSocket(`${protocol}://${server}`, resolve));
         } else {
           resolve();
         }
-      }).then(() => {
+      })
+      .then(() => {
         if (!login.requesting) {
           dispatch(requestLogin(username, (err) => {
             if (!err) {
@@ -128,9 +127,8 @@ class Login extends React.Component {
             }
           }));
         }
-      });
-    } catch (e) {
-      dispatch(loginError(e.message));
+      })
+      .catch((e) => dispatch(loginError(e.message)));
     }
   };
 
@@ -184,9 +182,10 @@ class Login extends React.Component {
                 style={styles.fieldIcon}
               />}
               onChange={(protocol) => this.setState({ protocol })}
+              value={this.state.protocol}
             >
-              <option value="ws">No Encryption</option>
               <option value="wss">SSL / TLS</option>
+              <option value="ws">No Encryption</option>
             </DropDown>
             <div style={styles.errorOuter}>
               <div style={styles.errorInner}>
