@@ -2206,18 +2206,7 @@ Primus.prototype.initialise = function initialise(options) {
   var primus = this
     , start;
 
-  primus.recovery
-  .on('reconnected', primus.emits('reconnected'))
-  .on('reconnect failed', primus.emits('reconnect failed', function failed(next) {
-    primus.emit('end');
-    next();
-  }))
-  .on('reconnect timeout', primus.emits('reconnect timeout'))
-  .on('reconnect scheduled', primus.emits('reconnect scheduled'))
-  .on('reconnect', primus.emits('reconnect', function reconnect(next) {
-    primus.emit('outgoing::reconnect');
-    next();
-  }));
+  primus.attachRecoveryListeners();
 
   primus.on('outgoing::open', function opening() {
     var readyState = primus.readyState;
@@ -3026,6 +3015,53 @@ Primus.prototype.critical = function critical(err) {
  */
 Primus.connect = function connect(url, options) {
   return new Primus(url, options);
+};
+
+/**
+ * Change recovery dynamically
+ *
+ * @param {Object} reconnect reconnect strategy
+ * @returns {Primus}
+ * @api public
+ */
+Primus.prototype.enableReconnect = function(options, strategy) {
+  var primus = this;
+
+  primus.options.reconnect = options;
+  primus.options.max = 'max' in options ? options.max : 500;
+  primus.options.min = 'min' in options ? options.min : 5000;
+  primus.options.retries = 'retries' in options ? options.retries : 10;
+  primus.options.strategy = strategy || 'disconnect,online,timeout';
+  primus.recovery = new Recovery(options);
+  primus.attachRecoveryListeners();
+
+  return primus;
+};
+
+/**
+* Attach recovery event handlers
+*
+* @param None
+* @return {Primus}
+* @api private
+*/
+Primus.prototype.attachRecoveryListeners = function () {
+  var primus = this;
+
+  primus.recovery
+    .on('reconnected', primus.emits('reconnected'))
+    .on('reconnect failed', primus.emits('reconnect failed', function failed(next) {
+      primus.emit('end');
+      next();
+    }))
+    .on('reconnect timeout', primus.emits('reconnect timeout'))
+    .on('reconnect scheduled', primus.emits('reconnect scheduled'))
+    .on('reconnect', primus.emits('reconnect', function reconnect(next) {
+      primus.emit('outgoing::reconnect');
+      next();
+    }));
+
+  return this;
 };
 
 //
