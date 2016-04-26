@@ -10,7 +10,7 @@ var plugins = [
   new Webpack.optimize.OccurenceOrderPlugin(),
   new ExtractTextPlugin('client.min.css'),
   new Webpack.DefinePlugin({
-    'process.env.NODE_ENV': (__DEV__) ? '"development"' : '"production"',
+    'global.__DEV__': (__DEV__) ? 'true' : 'false',
   }),
 ];
 
