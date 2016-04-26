@@ -1,6 +1,5 @@
 import Config from '~/core/config';
 import Primus from '~/helpers/Primus';
-import { forEach, omit, without } from 'lodash';
 
 const SOCKET_CONNECT_INIT = 'SOCKET_CONNECT_INIT';
 const SOCKET_CONNECT_SUCCESS = 'SOCKET_CONNECT_SUCCESS';
@@ -115,18 +114,22 @@ export function initializeSocket(hostname, callback = () => {}) {
     const failedConnection = () => {
       dispatch(socketConnectError('Connection failed, server is not responding.'));
     };
+    let reconnectEnabled = false;
 
     dispatch(socketConnectInit(hostname));
 
     socket.on('open', () => {
-      socket.enableReconnect(Config.socketReconnectStrategy);
+      if (!reconnectEnabled) {
+        reconnectEnabled = true;
+        socket.enableReconnect(Config.socketReconnectStrategy);
+        socket.on('reconnect', () => dispatch(socketConnectRetry()));
+        socket.on('reconnect failed', failedConnection);
+      }
+
       dispatch(socketConnectSuccess(socket));
       callback();
     });
 
-    socket.on('end', failedConnection);
-    socket.on('error', failedConnection);
-    socket.on('reconnect', () => dispatch(socketConnectRetry()));
-    socket.on('reconnect failed', failedConnection);
+    socket.on('close', failedConnection);
   };
 }
