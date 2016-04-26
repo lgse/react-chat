@@ -30,25 +30,10 @@ export class ChannelEvent extends React.Component {
     style: PropTypes.object,
   };
 
-  retryConnecting = (e) => {
-    const { dispatch, primus } = this.props;
-    const { socket } = primus;
-    let dispatched = false;
-    e.preventDefault();
-
-    socket.on('open', () => {
-      if (!dispatched) {
-        dispatched = true;
-        dispatch(emitEvent(new Event('connected')));
-      }
-    });
-
-    socket.open();
-  };
-
   render() {
     const {
       event,
+      primus,
       style,
     } = this.props;
 
@@ -62,6 +47,10 @@ export class ChannelEvent extends React.Component {
 
       case 'leave':
         parsedEvent = <span><b>{event.username}</b> has left #{event.channel}</span>;
+        break;
+
+      case 'quit':
+        parsedEvent = <span>{event.username} has disconnected</span>;
         break;
 
       case 'message':
@@ -81,7 +70,7 @@ export class ChannelEvent extends React.Component {
             <span>Reconnection failed. </span>
             <a
               href="#"
-              onClick={this.retryConnecting}
+              onClick={() => primus.socket.open()}
               style={{ color: Colors.error }}
             >
               <b>Click here</b>
@@ -111,14 +100,16 @@ export class ChannelEvent extends React.Component {
       color,
     });
 
-    return (
-      <div style={styles.outer}>
-        <div style={styles.event}>
-          <span>[{moment(event.timestamp).format('HH:mm')}] </span>
-          {parsedEvent}
+    return event.silent
+      ? null
+      : (
+        <div style={styles.outer}>
+          <div style={styles.event}>
+            <span>[{moment(event.timestamp).format('HH:mm')}] </span>
+            {parsedEvent}
+          </div>
         </div>
-      </div>
-    );
+      );
   }
 }
 
