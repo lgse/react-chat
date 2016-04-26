@@ -8,7 +8,7 @@ export default {
   fieldBorderColor: '#CCC',
   error: '#D32F2F',
   lightPrimary: '#EEE',
-  menuItemHover: '#C5CAE9',
+  menuItemHover: '#F9F9F9',
   primary: '#3F51B5',
   primaryText: '#212121',
   secondaryText: '#727272',
