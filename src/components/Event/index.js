@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import AnchorifyText from '~/components/AnchorifyText';
 import Colors from '~/theme/Colors';
 import Event from '~/helpers/Event';
 import moment from 'moment';
@@ -65,7 +66,16 @@ export class ChannelEvent extends React.Component {
 
       case 'message':
         color = Colors.primaryText;
-        parsedEvent = <span><b>{event.username}</b>: {event.message}</span>;
+        parsedEvent = (
+          <span>
+            <b>{event.username}</b>:{' '}
+            <AnchorifyText
+              style={{ color: Colors.accent }}
+              target="_blank"
+              text={event.message}
+            />{' '}
+          </span>
+        );
         break;
 
       case 'reconnecting':
