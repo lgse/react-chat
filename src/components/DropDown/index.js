@@ -128,7 +128,6 @@ class DropDown extends React.Component {
       ...other,
     } = this.props;
     const { focused } = this.state;
-
     const styles = getStyles({
       arrowStyle,
       focused,
