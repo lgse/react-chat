@@ -3,6 +3,7 @@ import Button from '~/components/Button';
 import Colors from '~/theme/Colors';
 import Icon from '~/components/Icon';
 import { connect } from 'react-redux';
+import { leaveChannel } from '~/redux/chat';
 import { toggleSideBar } from '~/redux/navigation';
 
 const styles = {
@@ -39,6 +40,20 @@ const styles = {
     textTransform: 'uppercase',
     verticalAlign: 'middle',
   },
+  closeButton: {
+    background: 'transparent',
+    boxShadow: 'none',
+    height: 64,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 64,
+  },
+  closeButtonIcon: {
+    color: Colors.white,
+    fontSize: 24,
+    top: 3,
+  },
 };
 
 export class TopBar extends React.Component {
@@ -55,8 +70,16 @@ export class TopBar extends React.Component {
     dispatch(toggleSideBar(!sidebarOpen));
   };
 
+  closeChannel = (e) => {
+    const { chat, dispatch } = this.props;
+    e.preventDefault();
+
+    dispatch(leaveChannel(chat.activeChannel));
+  };
+
   render() {
-    const { activeChannel } = this.props.chat;
+    const { activeChannel, channels } = this.props.chat;
+    const { idle } = channels[activeChannel];
 
     return (
       <div style={styles.outer}>
@@ -68,10 +91,20 @@ export class TopBar extends React.Component {
           />}
           onClick={this.handleClick}
           style={styles.button}
-          />
+        />
         <span style={styles.channelLabelOuter}>
           <span style={styles.channelLabelInner}>#{activeChannel}</span>
         </span>
+        {!idle && (
+          <Button
+            label={<Icon
+              onClick={this.closeChannel}
+              style={styles.closeButtonIcon}
+              zmdi="close"
+            />}
+            style={styles.closeButton}
+          />
+        )}
       </div>
     );
   }
