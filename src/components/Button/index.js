@@ -82,7 +82,7 @@ class Button extends React.Component {
     onClick: PropTypes.func.isRequired,
     onFocus: PropTypes.func,
     onHover: PropTypes.func,
-    rippleEffect: PropTypes.oneOf(['light', 'dark']),
+    rippleEffect: PropTypes.oneOf([false, 'light', 'dark']),
     rippleEffectClassname: PropTypes.string,
     style: PropTypes.object,
   };
