@@ -11,6 +11,7 @@ var plugins = [
   new ExtractTextPlugin('client.min.css'),
   new Webpack.DefinePlugin({
     'global.__DEV__': (__DEV__) ? 'true' : 'false',
+    'process.env.NODE_ENV': (__DEV__) ? '"development"' : '"production"',
   }),
 ];
 
