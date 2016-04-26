@@ -2,11 +2,11 @@ import Config from '~/core/config';
 import Primus from '~/helpers/Primus';
 import { forEach, omit, without } from 'lodash';
 
-const SOCKET_CONNECTION_INIT = 'SOCKET_CONNECTION_INIT';
-const SOCKET_CONNECTION_SUCCESS = 'SOCKET_CONNECTION_SUCCESS';
-const SOCKET_CONNECTION_ERROR = 'SOCKET_CONNECTION_ERROR';
-const SOCKET_CONNECTION_RETRY = 'SOCKET_CONNECTION_RETRY';
-const SOCKET_CONNECTION_RESET = 'SOCKET_CONNECTION_RESET';
+const SOCKET_CONNECT_INIT = 'SOCKET_CONNECT_INIT';
+const SOCKET_CONNECT_SUCCESS = 'SOCKET_CONNECT_SUCCESS';
+const SOCKET_CONNECT_ERROR = 'SOCKET_CONNECT_ERROR';
+const SOCKET_CONNECT_RETRY = 'SOCKET_CONNECT_RETRY';
+const SOCKET_CONNECT_RESET = 'SOCKET_CONNECT_RESET';
 const SOCKET_MESSAGE = 'SOCKET_MESSAGE';
 
 const initialState = {
@@ -20,7 +20,7 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case SOCKET_CONNECTION_INIT:
+    case SOCKET_CONNECT_INIT:
       return Object.assign({}, state, {
         connected: false,
         connecting: true,
@@ -29,7 +29,7 @@ export default function reducer(state = initialState, action = {}) {
         socket: null,
       });
 
-    case SOCKET_CONNECTION_SUCCESS:
+    case SOCKET_CONNECT_SUCCESS:
       return Object.assign({}, state, {
         connected: true,
         connecting: false,
@@ -37,21 +37,21 @@ export default function reducer(state = initialState, action = {}) {
         socket: action.socket,
       });
 
-    case SOCKET_CONNECTION_ERROR:
+    case SOCKET_CONNECT_ERROR:
       return Object.assign({}, state, {
         connected: false,
         connecting: false,
         error: action.error,
       });
 
-    case SOCKET_CONNECTION_RETRY:
+    case SOCKET_CONNECT_RETRY:
       return Object.assign({}, state, {
         connected: false,
         connecting: true,
         error: null,
       });
 
-    case SOCKET_CONNECTION_RESET:
+    case SOCKET_CONNECT_RESET:
       return Object.assign({}, state, {
         connected: false,
         connecting: false,
@@ -69,36 +69,36 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 
-function socketConnectionInit(hostname) {
+function socketConnectInit(hostname) {
   return {
-    type: SOCKET_CONNECTION_INIT,
+    type: SOCKET_CONNECT_INIT,
     hostname,
   };
 }
 
-function socketConnectionSuccess(socket) {
+function socketConnectSuccess(socket) {
   return {
-    type: SOCKET_CONNECTION_SUCCESS,
+    type: SOCKET_CONNECT_SUCCESS,
     socket,
   };
 }
 
-function socketConnectionError(error) {
+function socketConnectError(error) {
   return {
-    type: SOCKET_CONNECTION_ERROR,
+    type: SOCKET_CONNECT_ERROR,
     error,
   };
 }
 
-function socketConnectionRetry() {
+function socketConnectRetry() {
   return {
-    type: SOCKET_CONNECTION_RETRY,
+    type: SOCKET_CONNECT_RETRY,
   };
 }
 
-export function socketConnectionReset() {
+export function socketConnectReset() {
   return {
-    type: SOCKET_CONNECTION_RESET,
+    type: SOCKET_CONNECT_RESET,
   };
 }
 
@@ -111,20 +111,22 @@ function socketMessage(data) {
 
 export function initializeSocket(hostname, callback = () => {}) {
   return (dispatch) => {
-    const socket = Primus.connect(hostname, {
-      reconnect: Config.socketReconnectStrategy,
-    });
+    const socket = Primus.connect(hostname, { strategy: false });
+    const failedConnection = () => {
+      dispatch(socketConnectError('Connection failed, server is not responding.'));
+    };
 
-    dispatch(socketConnectionInit(hostname));
+    dispatch(socketConnectInit(hostname));
 
     socket.on('open', () => {
-      dispatch(socketConnectionSuccess(socket));
+      socket.enableReconnect(Config.socketReconnectStrategy);
+      dispatch(socketConnectSuccess(socket));
       callback();
     });
 
-    socket.on('reconnect', () => dispatch(socketConnectionRetry()));
-    socket.on('reconnect failed', () => {
-      dispatch(socketConnectionError('Connection failed, server is not responding.'));
-    });
+    socket.on('end', failedConnection);
+    socket.on('error', failedConnection);
+    socket.on('reconnect', () => dispatch(socketConnectRetry()));
+    socket.on('reconnect failed', failedConnection);
   };
 }

@@ -1,6 +1,6 @@
 import Config from '~/core/config';
 import { rejoinChannels, resetChat } from '~/redux/chat';
-import { socketConnectionReset } from '~/redux/primus';
+import { socketConnectReset } from '~/redux/primus';
 import { toggleSideBar } from '~/redux/navigation';
 
 const LOGIN_PENDING = 'LOGIN_REQUEST';
@@ -91,7 +91,7 @@ export function requestLogout(callback = () => {}) {
       socket.on('end', () => {
         dispatch(loginReset());
         dispatch(resetChat());
-        dispatch(socketConnectionReset());
+        dispatch(socketConnectReset());
         dispatch(toggleSideBar(false));
         callback();
       });
