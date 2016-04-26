@@ -5,7 +5,7 @@ This project was dedicated to working with WebSockets and ReactJS/Redux in tande
 Keep in mind, this was a weekend project, there are still a lot of improvements that can be done to this app.
 
 ### Live Demo
-You can see a live demo of the app [here](http://chat.lgse.net).
+You can see a live demo of the app [here](http://chat.lgse.net). Use server `chat.lgse.net:1337` and encryption `SSL/TLS`
 
 ### Requirements
 * Node.JS ^4.0.0
