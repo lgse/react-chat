@@ -41,7 +41,7 @@ export default function reducer(state = initialState, action = {}) {
 
     case JOIN_CHANNEL:
       return Object.assign({}, state, {
-        activeChannel: action.channel,
+        activeChannel: (action.rejoin) ? state.activeChannel : action.channel,
         channels: Object.assign({}, state.channels, {
           [action.channel]: {
             idle: false,
@@ -198,6 +198,7 @@ export function joinChannel(channel, rejoin = false) {
             type: JOIN_CHANNEL,
             channel,
             events: (c) ? c.events : [],
+            rejoin,
           });
 
           if (sidebarOpen) {
