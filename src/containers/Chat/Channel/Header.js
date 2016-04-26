@@ -81,7 +81,7 @@ class Header extends React.Component {
                   zmdi="close"
                 />}
                 style={styles.button}
-              />
+                />
             )}
           </h4>
         </div>

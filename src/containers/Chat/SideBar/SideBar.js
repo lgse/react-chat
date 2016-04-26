@@ -1,8 +1,7 @@
 import React, { PropTypes } from 'react';
-import ChannelList from '../ChannelList';
+import ChannelList from './ChannelList';
 import Colors from '~/theme/Colors';
-import Circle from '~/components/Circle';
-import Profile from '../Profile';
+import Profile from './Profile';
 
 const getStyles = (docked) => (
   {

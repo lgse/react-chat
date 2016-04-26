@@ -40,7 +40,7 @@ export class Feed extends React.Component {
       <Event
         event={event}
         key={index}
-      />
+        />
     ));
 
     return (
@@ -48,7 +48,7 @@ export class Feed extends React.Component {
         <div
           children={eventList}
           style={styles.inner}
-        />
+          />
       </div>
     );
   }

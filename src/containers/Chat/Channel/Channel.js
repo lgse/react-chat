@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react';
 import Button from '~/components/Button';
-import Feed from '../Feed';
-import Header from '../Header';
-import TextBox from '../TextBox';
-import Topbar from '../TopBar';
+import Feed from './Feed';
+import Header from './Header';
+import TextBox from './TextBox';
+import Topbar from './TopBar';
 import Colors from '~/theme/Colors';
 import { connect } from 'react-redux';
 import { toggleSideBar } from '~/redux/navigation';
@@ -63,7 +63,7 @@ export class Channel extends React.Component {
             onClick={this.handleClickAway}
             rippleEffect={false}
             style={styles.button}
-          />
+            />
         )}
       </div>
     );

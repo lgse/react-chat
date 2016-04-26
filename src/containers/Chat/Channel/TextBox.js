@@ -24,7 +24,7 @@ const getStyles = (resolution) => ({
     border: 0,
     color: Colors.primaryText,
     float: 'left',
-    fontSize: 18,
+    fontSize: 16,
     width: '100%',
   },
 });
@@ -69,7 +69,7 @@ export class TextBox extends React.Component {
               style={styles.input}
               type="text"
               value={this.state.value}
-            />
+              />
             <FormSubmit />
           </form>
         </div>

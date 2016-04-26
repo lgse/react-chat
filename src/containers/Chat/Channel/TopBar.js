@@ -68,7 +68,7 @@ export class TopBar extends React.Component {
           />}
           onClick={this.handleClick}
           style={styles.button}
-        />
+          />
         <span style={styles.channelLabelOuter}>
           <span style={styles.channelLabelInner}>#{activeChannel}</span>
         </span>

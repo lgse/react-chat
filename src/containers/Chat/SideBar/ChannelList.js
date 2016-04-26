@@ -170,14 +170,14 @@ class ChannelList extends React.Component {
           labelStyle={styles.channelLabel}
           onClick={(e) => this.switchChannel(channel)}
           style={styles.channelButton}
-        />
+          />
         {!channels[channel].viewed && (
           <Indicator
             enabled
             enabledColor={Colors.white}
             indicatorStyle={styles.channelIndicatorInner}
             style={styles.channelIndicatorOuter}
-          />
+            />
         )}
       </div>
     ));
@@ -203,7 +203,7 @@ class ChannelList extends React.Component {
           }}
           ref="button"
           style={styles.button}
-        />
+          />
         {addChannelMode && (
           <div style={styles.addChannel}>
             <form onSubmit={this.handleChannelSubmit}>
@@ -213,7 +213,7 @@ class ChannelList extends React.Component {
                 onChange={this.handleChange}
                 style={styles.textField}
                 value={value}
-              />
+                />
               <FormSubmit />
             </form>
           </div>

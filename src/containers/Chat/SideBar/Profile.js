@@ -92,7 +92,7 @@ class Profile extends React.Component {
               enabled={connected}
               label={connected ? 'Connected' : 'Disconnected'}
               style={styles.indicator}
-            />
+              />
           </div>
         </div>
         <FloatingMenu
@@ -102,7 +102,7 @@ class Profile extends React.Component {
             zmdi="more-vert"
           />}
           style={styles.moreMenu}
-        >
+          >
           <MenuItem
             icon={<Icon
               size={18}
@@ -111,7 +111,7 @@ class Profile extends React.Component {
             />}
             label="Logout"
             onClick={this.logout}
-          />
+            />
         </FloatingMenu>
       </div>
     );
