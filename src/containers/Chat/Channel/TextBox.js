@@ -69,7 +69,7 @@ export class TextBox extends React.Component {
               style={styles.input}
               type="text"
               value={this.state.value}
-              />
+            />
             <FormSubmit />
           </form>
         </div>

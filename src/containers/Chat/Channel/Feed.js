@@ -48,7 +48,7 @@ export class Feed extends React.Component {
         <div
           children={eventList}
           style={styles.inner}
-          />
+        />
       </div>
     );
   }
