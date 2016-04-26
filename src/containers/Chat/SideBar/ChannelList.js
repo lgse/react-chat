@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import Button from '~/components/Button';
 import Colors from '~/theme/Colors';
-import Circle from '~/components/Circle';
 import FormSubmit from '~/components/FormSubmit';
 import Icon from '~/components/Icon';
 import Indicator from '~/components/Indicator';
