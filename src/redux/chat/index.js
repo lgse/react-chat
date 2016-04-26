@@ -91,7 +91,7 @@ export function emitEvent(event = {}) {
     const { activeChannel, channels } = chat;
     const data = event.data;
     const channel = data.channel || activeChannel;
-    const c = channels[channel];
+    let c = channels[channel];
     let payload = {};
 
     switch (event.action) {
@@ -101,12 +101,34 @@ export function emitEvent(event = {}) {
           channels: Object.assign({}, channels, {
             [channel]: {
               ...c,
-              viewed: activeChannel === channel,
               events: [...c.events, data],
               users: data.users,
+              viewed: (data.silent) ? c.viewed : activeChannel === channel,
             },
           }),
         };
+        break;
+
+      case 'quit':
+        payload = {
+          channels,
+        };
+
+        data.channels.forEach((chan) => {
+          c = channels[chan];
+
+          if (c) {
+            const isInAC = channels[activeChannel].users.indexOf(data.username) !== -1;
+
+            payload.channels = Object.assign({}, payload.channels, {
+              [chan]: {
+                ...c,
+                events: [...c.events, data],
+                viewed: (!isInAC) ? false : c.viewed,
+              },
+            });
+          }
+        });
         break;
 
       case 'event':
@@ -115,8 +137,8 @@ export function emitEvent(event = {}) {
           channels: Object.assign({}, channels, {
             [channel]: {
               ...c,
-              viewed: activeChannel === channel,
               events: [...c.events, data],
+              viewed: (data.silent) ? c.viewed : activeChannel === channel,
             },
           }),
         };
@@ -285,9 +307,9 @@ export function initializeChat() {
       type: INITIALIZE_CHAT,
     });
 
+    socket.on('open', () => dispatch(emitEvent(new Event('connected'))));
     socket.on('data', (data) => dispatch(emitEvent(data)));
     socket.on('reconnect', () => dispatch(emitEvent(new Event('reconnecting'))));
-    socket.on('reconnected', () => dispatch(emitEvent(new Event('connected'))));
     socket.on('reconnect failed', () => dispatch(emitEvent(new Event('reconnect failed'))));
   };
 }
