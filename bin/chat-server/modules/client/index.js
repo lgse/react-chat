@@ -119,7 +119,9 @@ ChatClient.prototype = {
   joinChannel: function(channel) {
     if (this.isOnChannel(channel)) {
       throw "Already in channel: #" + channel;
-    } if (channel.length > 25) {
+    } else if (!new RegExp(/^[a-z0-9\-]+$/i).test(channel)) {
+      throw "Channel name can only contain letters, numbers and dashes";
+    } else if (channel.length > 25) {
       throw "Channel name cannot be longer than 25 characters.";
     }
 
