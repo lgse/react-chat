@@ -1,6 +1,7 @@
 import Config from '~/core/config';
 import Event from '~/helpers/Event';
 import Error from '~/helpers/Error';
+import { toggleSideBar } from '~/redux/navigation';
 import { nth, omit, tail, without } from 'lodash';
 
 const INITIALIZE_CHAT = 'INITIALIZE_CHAT';
@@ -180,6 +181,7 @@ export function joinChannel(channel, rejoin = false) {
   return (dispatch, getState) => {
     const store = getState();
     const { socket } = store.primus;
+    const { sidebarOpen } = store.navigation;
     const c = store.chat.channels[channel];
 
     if (c && !rejoin) {
@@ -197,6 +199,10 @@ export function joinChannel(channel, rejoin = false) {
             channel,
             events: (c) ? c.events : [],
           });
+
+          if (sidebarOpen) {
+            dispatch(toggleSideBar(false));
+          }
         }
       });
     }
