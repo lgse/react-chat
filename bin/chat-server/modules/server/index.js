@@ -41,11 +41,17 @@ ChatServer.prototype ={
     this.users[username] = 1;
   },
 
-  removeUser: function(username) {
+  removeUser: function(username, channels) {
     this.users = _.omit(this.users, username);
+
+    this.pub.dispatch('quit', {
+      type: 'quit',
+      username: username,
+      channels: channels,
+    }, true);
   },
 
-  channelEvent: function(action, channel, username) {
+  channelEvent: function(action, channel, username, silent) {
     if (!this.channels[channel]) {
       this.channels[channel] = [];
     }
@@ -63,6 +69,7 @@ ChatServer.prototype ={
     this.pub.dispatch(action, {
       type: action,
       channel: channel,
+      silent: silent === true,
       username: username,
       users: this.channels[channel],
     });

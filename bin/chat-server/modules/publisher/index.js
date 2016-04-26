@@ -7,13 +7,14 @@ var Publisher = function (config) {
 };
 
 Publisher.prototype = {
-  dispatch: function(action, data) {
+  dispatch: function(action, data, global) {
     try {
       var payload = {
         action: action,
         data: _.merge({
           timestamp: Date.now(),
         }, data),
+        global: global === true,
       };
 
       this.pub.publish(this.channel, JSON.stringify(payload));

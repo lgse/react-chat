@@ -57,7 +57,7 @@ ChatClient.prototype = {
     this.sub.on('message', function (channel, message) {
       message = JSON.parse(message);
 
-      if (self.isOnChannel(message.data.channel)) {
+      if (self.isOnChannel(message.data.channel) || message.global) {
         self.spark.write(_.merge({
           data: null,
           error: null,
@@ -76,11 +76,11 @@ ChatClient.prototype = {
     this.sub.quit();
 
     // Remove user from connected users on server
-    this.server.removeUser(this.username);
+    this.server.removeUser(this.username, this.channels);
 
     // Leave all channels
-    _.forEach(this.channels, function (channel) {
-      self.leaveChannel(channel);
+    this.channels.forEach(function (channel) {
+      self.leaveChannel(channel, true);
     });
   },
 
@@ -127,13 +127,13 @@ ChatClient.prototype = {
     this.server.channelEvent('join', channel, this.username);
   },
 
-  leaveChannel: function(channel) {
+  leaveChannel: function(channel, silent) {
     if (!this.isOnChannel(channel)) {
       throw "Already left channel: #" + channel;
     }
 
     this.channels = _.without(this.channels, channel);
-    this.server.channelEvent('leave', channel, this.username);
+    this.server.channelEvent('leave', channel, this.username, silent);
   }
 };
 
