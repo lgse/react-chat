@@ -37,6 +37,9 @@ const getStyles = ({
       float: 'right',
       fontSize: 16,
       height: 'calc(100%)',
+      margin: 0,
+      padding: 0,
+      WebkitAppearance: 'none',
       width: (icon) ? 'calc(100% - 50px)' : '100%',
     }, inputStyle),
   }
