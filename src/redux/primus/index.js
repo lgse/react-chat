@@ -111,8 +111,11 @@ function socketMessage(data) {
 export function initializeSocket(hostname, callback = () => {}) {
   return (dispatch) => {
     const socket = Primus.connect(hostname, { strategy: false });
-    const failedConnection = () => {
-      dispatch(socketConnectError('Connection failed, server is not responding.'));
+    const failedConnection = (err = {}) => {
+      dispatch(socketConnectError(
+        err.message
+        || 'Connection failed, server is not responding.'
+      ));
     };
     let reconnectEnabled = false;
 
@@ -130,6 +133,7 @@ export function initializeSocket(hostname, callback = () => {}) {
       callback();
     });
 
-    socket.on('close', failedConnection);
+    socket.on('error', (err) => failedConnection(err));
+    socket.on('close', (err) => failedConnection(err));
   };
 }
