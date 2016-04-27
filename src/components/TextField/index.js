@@ -11,10 +11,8 @@ const getStyles = ({
   {
     outer: Object.assign({
       background: Colors.white,
+      borderWidth: 0,
       borderRadius: 2,
-      borderColor: focused ? Colors.accent : Colors.fieldBorderColor,
-      borderStyle: 'solid',
-      borderWidth: '1px',
       color: Colors.primaryText,
       float: 'left',
       height: 50,

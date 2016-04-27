@@ -3,20 +3,18 @@ import Colors from '~/theme/Colors';
 import Icon from '~/components/Icon';
 
 const getStyles = ({
-  arrowStyle,
-  focused,
-  icon,
-  iconWrapperStyle,
-  inputStyle,
-  style,
+    arrowStyle,
+    focused,
+    icon,
+    iconWrapperStyle,
+    inputStyle,
+    style,
   }) => (
   {
     outer: Object.assign({
       background: Colors.white,
+      border: 0,
       borderRadius: 2,
-      borderColor: focused ? Colors.accent : Colors.fieldBorderColor,
-      borderStyle: 'solid',
-      borderWidth: '1px',
       color: Colors.primaryText,
       cursor: 'pointer',
       float: 'left',

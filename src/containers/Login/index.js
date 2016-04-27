@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import Button from '~/components/Button';
-import Circle from '~/components/Circle';
 import DropDown from '~/components/DropDown';
 import FormSubmit from '~/components/FormSubmit';
 import Icon from '~/components/Icon';
@@ -12,11 +11,10 @@ import { requestLogin, loginError, loginReset } from '~/redux/login';
 
 const getStyles = (resolution) => ({
   outer: {
-    background: '#EEE',
+    background: Colors.darkPrimary,
     display: 'table',
     height: '100%',
     left: 0,
-    paddingBottom: 30,
     position: 'absolute',
     top: 0,
     width: '100%',
@@ -24,25 +22,22 @@ const getStyles = (resolution) => ({
   inner: {
     display: 'table-cell',
     textAlign: 'center',
-    verticalAlign: 'top',
-  },
-  circle: {
-    background: Colors.accent,
-    margin: '0 auto 50px',
-  },
-  hero: {
-    background: Colors.accent,
-    marginBottom: 50,
-    padding: (resolution.mobile) ? '30px 0' : '60px 0',
-    width: '100%',
-  },
-  logo: {
-    color: Colors.white,
-    top: 2,
+    verticalAlign: 'middle',
   },
   form: {
     margin: '0 auto',
-    width: (resolution.mobile) ? 300 : 360,
+    padding: 30,
+    width: (resolution.mobile) ? '100%' : 420,
+  },
+  header: {
+    clear: 'both',
+    color: Colors.white,
+    float: 'left',
+    fontSize: 30,
+    fontWeight: 400,
+    lineHeight: '30px',
+    marginBottom: 50,
+    width: '100%',
   },
   button: {
     clear: 'both',
@@ -64,7 +59,7 @@ const getStyles = (resolution) => ({
     width: '100%',
   },
   errorInner: {
-    color: Colors.error,
+    color: Colors.white,
     display: 'table-cell',
     verticalAlign: 'middle',
     textAlign: 'center',
@@ -85,6 +80,8 @@ class Login extends React.Component {
 
   constructor(props, context) {
     super(props, context);
+
+    document.body.style.background = Colors.darkPrimary;
 
     this.state = {
       server: '',
@@ -140,18 +137,12 @@ class Login extends React.Component {
     return (
       <div style={styles.outer}>
         <div style={styles.inner}>
-          <div style={styles.hero}>
-            <Icon
-              size={100}
-              style={styles.logo}
-              zmdi="comments"
-            />
-          </div>
           <form
             className="clearfix"
             onSubmit={this.handleSubmit}
             style={styles.form}
           >
+            <h1 style={styles.header}>Sign In</h1>
             <TextField
               focused
               icon={<Icon

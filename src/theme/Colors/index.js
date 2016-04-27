@@ -5,7 +5,6 @@ export default {
   darkPrimary: '#303F9F',
   disabledAccent: '#A1A1A1',
   dividerColor: '#B6B6B6',
-  fieldBorderColor: '#CCC',
   error: '#D32F2F',
   lightPrimary: '#EEE',
   menuItemHover: '#F9F9F9',
