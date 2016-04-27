@@ -4,17 +4,22 @@ import App from '~/containers/App';
 import Chat from '~/containers/Chat';
 import Login from '~/containers/Login';
 
-export default function routes(store) {
+function routes(store) {
   function requireLogin(nextState, replace) {
-    if (!store.getState().login.loggedIn && nextState.location.pathname !== '/login') {
+    const { loggedIn } = store.getState().login;
+    const nextPathname = nextState.location.pathname;
+    let pathname = null;
+
+    if (!loggedIn && nextPathname !== '/login') {
+      pathname = '/login';
+    } else if (loggedIn && nextPathname === '/login') {
+      pathname = '/chat';
+    }
+
+    if (pathname) {
       replace({
-        pathname: '/login',
-        state: { nextPathname: nextState.location.pathname },
-      });
-    } else if (store.getState().login.loggedIn && nextState.location.pathname === '/login') {
-      replace({
-        pathname: '/chat',
-        state: { nextPathname: nextState.location.pathname },
+        pathname,
+        state: { nextPathname },
       });
     }
   }
@@ -28,3 +33,5 @@ export default function routes(store) {
     </Route>
   );
 }
+
+export default routes;
