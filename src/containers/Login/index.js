@@ -33,10 +33,10 @@ const getStyles = (resolution) => ({
     clear: 'both',
     color: Colors.white,
     float: 'left',
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: 400,
     lineHeight: '30px',
-    marginBottom: 50,
+    marginBottom: 60,
     width: '100%',
   },
   button: {
@@ -55,7 +55,7 @@ const getStyles = (resolution) => ({
     clear: 'both',
     display: 'table',
     float: 'left',
-    height: 50,
+    height: 60,
     width: '100%',
   },
   errorInner: {
