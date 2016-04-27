@@ -190,22 +190,20 @@ export function joinChannel(channel, rejoin = false) {
       socket.writeAndWait({
         action: 'join-channel',
         data: { channel },
-      }, (err) => {
-        if (err) {
-          dispatch(emitEvent(new Error(err)));
-        } else {
-          dispatch({
-            type: JOIN_CHANNEL,
-            channel,
-            events: (c) ? c.events : [],
-            rejoin,
-          });
+      })
+      .then(() => {
+        dispatch({
+          type: JOIN_CHANNEL,
+          channel,
+          events: (c) ? c.events : [],
+          rejoin,
+        });
 
-          if (sidebarOpen) {
-            dispatch(toggleSideBar(false));
-          }
+        if (sidebarOpen) {
+          dispatch(toggleSideBar(false));
         }
-      });
+      })
+      .catch((err) => dispatch(emitEvent(new Error(err))));
     }
   };
 }
@@ -228,17 +226,15 @@ export function leaveChannel(channel) {
       socket.writeAndWait({
         action: 'leave-channel',
         data: { channel },
-      }, (err) => {
-        if (err) {
-          dispatch(emitEvent(new Error(err)));
-        } else {
-          dispatch({
-            type: LEAVE_CHANNEL,
-            activeChannel,
-            channel,
-          });
-        }
-      });
+      })
+      .then(() => {
+        dispatch({
+          type: LEAVE_CHANNEL,
+          activeChannel,
+          channel,
+        });
+      })
+      .catch((err) => dispatch(emitEvent(new Error(err))));
     }
   };
 }
@@ -293,15 +289,14 @@ export function sendMessage(message, callback = () => {}) {
         channel: activeChannel,
         message,
       },
-    }, (err) => {
-      if (err) {
-        dispatch(sendMessageError(err));
-        dispatch(emitEvent(new Error(err)));
-      } else {
-        dispatch(sendMessageSuccess());
-      }
-
-      callback(err);
+    })
+    .then(() => {
+      dispatch(sendMessageSuccess());
+      callback();
+    })
+    .catch((err) => {
+      dispatch(sendMessageError(err));
+      dispatch(emitEvent(new Error(err)));
     });
   };
 }

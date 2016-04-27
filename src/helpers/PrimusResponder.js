@@ -18,13 +18,16 @@ function PrimusResponder(primus) {
   }
 
   function dispatchResponse(responseId, data) {
-    const callback = responseCallbacks[responseId];
+    const [resolve, reject] = responseCallbacks[responseId];
+    const error = (data) ? data.error : null;
 
-    if (callback) {
-      const error = (data) ? data.error : null;
-      delete responseCallbacks[responseId];
-      callback(error, omit(data, 'error'));
+    if (error) {
+      reject(data);
+    } else {
+      resolve(omit(data, 'error'));
     }
+
+    delete responseCallbacks[responseId];
   }
 
   function handleIncoming(packet) {
@@ -44,17 +47,18 @@ function PrimusResponder(primus) {
     return proceed;
   }
 
-  this.writeAndWait = (data, callback) => {
-    const requestId = uuid.v4();
-    const envelope = {
-      plugin: 'primus-responder',
-      requestId,
-      data,
-    };
-
-    responseCallbacks[requestId] = callback;
-    this.write(envelope);
-  };
+  this.writeAndWait = (data) => (
+    new Promise((resolve, reject) => {
+      const requestId = uuid.v4();
+      const envelope = {
+        plugin: 'primus-responder',
+        requestId,
+        data,
+      };
+      responseCallbacks[requestId] = [resolve, reject];
+      this.write(envelope);
+    })
+  );
 
   return handleIncoming;
 }

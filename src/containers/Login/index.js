@@ -100,8 +100,8 @@ class Login extends React.Component {
     const { dispatch, login, primus } = this.props;
     const { protocol, server, username } = this.state;
 
-    if (!primus.connecting) {
-      if (login.error && !login.requesting) {
+    if (!primus.connecting && !login.requesting) {
+      if (login.error) {
         dispatch(loginReset());
       }
 
@@ -110,20 +110,14 @@ class Login extends React.Component {
           throw new Error('Server field cannot be empty.');
         } else if (!username) {
           throw new Error('Username field cannot be empty.');
-        } else if (!primus.connected) {
-          dispatch(initializeSocket(`${protocol}://${server}`, resolve));
-        } else {
-          resolve();
+        } if (!primus.connected) {
+          return dispatch(initializeSocket(`${protocol}://${server}`, resolve));
         }
+
+        return resolve();
       })
       .then(() => {
-        if (!login.requesting) {
-          dispatch(requestLogin(username, (err) => {
-            if (!err) {
-              this.context.router.push('/chat');
-            }
-          }));
-        }
+        dispatch(requestLogin(username, () => this.context.router.push('/chat')));
       })
       .catch((e) => dispatch(loginError(e.message)));
     }

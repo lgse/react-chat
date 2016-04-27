@@ -47,11 +47,7 @@ export class TextBox extends React.Component {
     e.preventDefault();
 
     if (this.state.value && !chat.pendingMessage) {
-      dispatch(sendMessage(this.state.value, (err) => {
-        if (!err) {
-          this.setState({ value: '' });
-        }
-      }));
+      dispatch(sendMessage(this.state.value, () => this.setState({ value: '' })));
     }
   };
 

@@ -114,14 +114,12 @@ export function requestLogin(username, callback = () => {}) {
           idleChannel: Config.idleChannel,
           username,
         },
-      }, (err) => {
-        if (err) {
-          dispatch(loginError(err));
-        } else {
-          dispatch(loginSuccess());
-        }
-        cb(err);
-      });
+      })
+      .then(() => {
+        dispatch(loginSuccess());
+        callback();
+      })
+      .catch((err) => dispatch(loginError(err)));
     }
 
     function reLogin() {
