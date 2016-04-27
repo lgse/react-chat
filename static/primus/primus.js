@@ -3061,7 +3061,7 @@ Primus.prototype.attachRecoveryListeners = function () {
       next();
     }));
 
-  return this;
+  return primus;
 };
 
 //
