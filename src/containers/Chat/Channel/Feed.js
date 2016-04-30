@@ -40,7 +40,7 @@ export class Feed extends React.Component {
       <Event
         event={event}
         key={index}
-        />
+      />
     ));
 
     return (
