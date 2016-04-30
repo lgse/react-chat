@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
-import AnchorifyText from '~/components/AnchorifyText';
 import Colors from '~/theme/Colors';
-import Event from '~/helpers/Event';
+import Message from '~/components/Message';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { emitEvent } from '~/redux/chat';
@@ -67,14 +66,13 @@ export class ChannelEvent extends React.Component {
       case 'message':
         color = Colors.primaryText;
         parsedEvent = (
-          <span>
+          <div style={{ display: 'inline' }}>
             <b>{event.username}</b>:{' '}
-            <AnchorifyText
+            <Message
               style={{ color: Colors.accent }}
-              target="_blank"
               text={event.message}
             />{' '}
-          </span>
+          </div>
         );
         break;
 
@@ -125,7 +123,11 @@ export class ChannelEvent extends React.Component {
       : (
         <div style={styles.outer}>
           <div style={styles.event}>
-            {timestamp && <span>[{moment(event.timestamp).format('HH:mm')}] </span>}
+            {timestamp && (
+              <div style={{ display: 'inline' }}>
+                [{moment(event.timestamp).format('HH:mm')}]{' '}
+              </div>
+            )}
             {parsedEvent}
           </div>
         </div>
