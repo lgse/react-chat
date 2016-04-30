@@ -110,7 +110,10 @@ function socketMessage(data) {
 
 export function initializeSocket(hostname, callback = () => {}) {
   return (dispatch) => {
-    const socket = Primus.connect(hostname, { strategy: false });
+    const socket = Primus.connect(hostname, {
+      reconnect: Config.socketReconnectStrategy,
+      strategy: false,
+    });
     const failedConnection = (err = {}) => {
       dispatch(socketConnectError(
         err.message
@@ -124,7 +127,7 @@ export function initializeSocket(hostname, callback = () => {}) {
     socket.on('open', () => {
       if (!reconnectEnabled) {
         reconnectEnabled = true;
-        socket.enableReconnect(Config.socketReconnectStrategy);
+        socket.options.strategy = 'disconnect,online,timeout';
         socket.on('reconnect', () => dispatch(socketConnectRetry()));
         socket.on('reconnect failed', failedConnection);
       }
