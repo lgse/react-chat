@@ -22,7 +22,7 @@ function PrimusResponder(primus) {
     const error = (data) ? data.error : null;
 
     if (error) {
-      reject(data);
+      reject(error);
     } else {
       resolve(omit(data, 'error'));
     }
