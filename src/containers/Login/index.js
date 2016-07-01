@@ -81,8 +81,6 @@ class Login extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    document.body.style.background = Colors.darkPrimary;
-
     this.state = {
       server: '',
       username: '',
