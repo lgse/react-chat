@@ -28,6 +28,7 @@ h1,h2,h3,h4,h5,h6,p{
   padding: 0
 }
 
-input,textarea,select,a,div{
+a,div,input,pre,select,textarea{
+  font-family: 'Open Sans',sans-serif;
   outline: none
 }
