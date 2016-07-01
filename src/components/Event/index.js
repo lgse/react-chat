@@ -16,6 +16,7 @@ const getStyles = ({ style, color }) => (
 
     event: {
       color,
+      float: 'left',
       fontSize: 14,
     },
   }
@@ -66,12 +67,9 @@ export class ChannelEvent extends React.Component {
       case 'message':
         color = Colors.primaryText;
         parsedEvent = (
-          <div style={{ display: 'inline' }}>
-            <b>{event.username}</b>:{' '}
-            <Message
-              style={{ color: Colors.accent }}
-              text={event.message}
-            />{' '}
+          <div style={{ float: 'left' }}>
+            <b style={{ float: 'left', marginRight: 5 }}>{event.username}:</b>
+            <Message text={event.message} />
           </div>
         );
         break;
@@ -124,7 +122,7 @@ export class ChannelEvent extends React.Component {
         <div style={styles.outer}>
           <div style={styles.event}>
             {timestamp && (
-              <div style={{ display: 'inline' }}>
+              <div style={{ float: 'left', marginRight: 5 }}>
                 [{moment(event.timestamp).format('HH:mm')}]{' '}
               </div>
             )}
