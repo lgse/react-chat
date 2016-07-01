@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import Colors from '~/theme/Colors';
-import FormSubmit from '~/components/FormSubmit';
 import { connect } from 'react-redux';
 import { sendMessage } from '~/redux/chat';
 
@@ -18,13 +17,16 @@ const getStyles = (resolution) => ({
     zIndex: (resolution.mobile) ? 2 : 0,
   },
   inner: {
-    padding: (resolution.mobile) ? '15px 20px 0' : '20px 20px 0 260px',
+    padding: (resolution.mobile) ? 0 : '0 0 0 240px',
   },
-  input: {
+  textarea: {
     border: 0,
     color: Colors.primaryText,
     float: 'left',
     fontSize: 16,
+    height: (resolution.mobile) ? 64 : 100,
+    padding: 20,
+    resize: 'none',
     width: '100%',
   },
 });
@@ -40,13 +42,13 @@ export class TextBox extends React.Component {
     super(props);
 
     this.state = { value: '' };
+    this.ctrlDown = false;
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = () => {
     const { chat, dispatch } = this.props;
-    e.preventDefault();
 
-    if (this.state.value && !chat.pendingMessage) {
+    if (this.state.value.trim() && !chat.pendingMessage) {
       dispatch(sendMessage(this.state.value, () => this.setState({ value: '' })));
     }
   };
@@ -59,14 +61,29 @@ export class TextBox extends React.Component {
       <div style={styles.outer}>
         <div className="clearfix" style={styles.inner}>
           <form onSubmit={this.handleSubmit}>
-            <input
+            <textarea
               onChange={(e) => this.setState({ value: e.target.value })}
+              onKeyDown={(e) => {
+                if (e.key === 'Control') {
+                  this.ctrlDown = true;
+                }
+
+                if (e.key === 'Enter' && !this.ctrlDown) {
+                  this.handleSubmit();
+                } else if (e.key === 'Enter' && this.ctrlDown) {
+                  this.setState({ value: `${e.target.value}\r\n` });
+                }
+              }}
+              onKeyUp={(e) => {
+                if (e.key === 'Control') {
+                  this.ctrlDown = false;
+                }
+              }}
               placeholder="Type a message and hit Enter..."
-              style={styles.input}
+              style={styles.textarea}
               type="text"
               value={this.state.value}
             />
-            <FormSubmit />
           </form>
         </div>
       </div>
