@@ -14,7 +14,9 @@ const getStyles = (resolution) => ({
     WebkitOverflowScrolling: 'touch',
   },
   inner: {
+    float: 'left',
     padding: (resolution.mobile) ? 20 : '20px 20px 20px 260px',
+    width: '100%',
   },
 });
 
